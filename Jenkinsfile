@@ -15,7 +15,11 @@ pipeline {
                 script {
                     checkout([ 
                         $class: 'GitSCM',
+<<<<<<< HEAD
                         branches: [[name: "*/${BRANCH_NAME}"]],
+=======
+                        branches: [[name: "*/${env.GIT_BRANCH}"]],
+>>>>>>> 4a55d94 (Update Jenkinsfile)
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
                             credentialsId: "${GIT_CREDENTIALS_ID}"
@@ -35,6 +39,7 @@ pipeline {
 
         stage('Push Docker Image') {
             when {
+<<<<<<< HEAD
                 branch 'master'
             }
             steps {
@@ -46,6 +51,27 @@ pipeline {
                         sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
                     }
                     sh "docker push ${buildTag}"
+=======
+                anyOf {
+                    branch 'dev'
+                    branch 'master'
+                }
+            }
+            steps {
+                script {
+                    def dockerRepo = env.GIT_BRANCH == 'master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+
+                    // Build the Docker image
+                    sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
+
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
+
+                    // Push the Docker image
+                    sh "docker push ${dockerRepo}:${env.BUILD_NUMBER}"
+>>>>>>> 4a55d94 (Update Jenkinsfile)
                 }
             }
         }
