@@ -4,11 +4,7 @@ services:
   web:
     image: ${DOCKER_PROD_REPO}:${BUILD_NUMBER}
     ports:
-<<<<<<< HEAD
       - "8085:80"
-=======
-      - "8084:80"
->>>>>>> 791cd1b (Update docker-compose.yml)
     environment:
       - NODE_ENV=production
     command: ["npm", "start"]
