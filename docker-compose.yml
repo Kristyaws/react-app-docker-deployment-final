@@ -3,7 +3,6 @@ version: '3'
 services:
   web:
     image: kristyaws/dev-image:latest
-    build: .
     ports:
       - "80:80"
     volumes:
