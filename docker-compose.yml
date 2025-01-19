@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    image: kristyaws/dev-image:latest
+    image: kristyaws/prod-image:latest
     ports:
       - "80:80"
     environment:

@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_DEV_REPO = 'kristyaws/dev'
         DOCKER_PROD_REPO = 'kristyaws/prod'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         GIT_CREDENTIALS_ID = 'git-credentials'
         GIT_REPO_URL = 'https://github.com/Kristyaws/react-app-docker-deployment-final.git'
+        BRANCH_NAME = 'master'
     }
 
     stages {
@@ -15,7 +15,11 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
+<<<<<<< HEAD
                         branches: [[name: "*/${env.GIT_BRANCH}"]],
+=======
+                        branches: [[name: "*/${BRANCH_NAME}"]],
+>>>>>>> d765b77 (Update Jenkinsfile and docker-compose.yml file)
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
                             credentialsId: "${GIT_CREDENTIALS_ID}"
@@ -35,6 +39,7 @@ pipeline {
         }
 
         stage('Push Docker Image') {
+<<<<<<< HEAD
             when {
                 anyOf {
                     branch 'dev'
@@ -44,6 +49,11 @@ pipeline {
             steps {
                 script {
                     def dockerRepo = env.GIT_BRANCH == 'master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+=======
+            steps {
+                script {
+                    def dockerRepo = DOCKER_PROD_REPO
+>>>>>>> d765b77 (Update Jenkinsfile and docker-compose.yml file)
 
                     // Build the Docker image
                     sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
