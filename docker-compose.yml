@@ -4,7 +4,7 @@ services:
   web:
     image: kristyaws/dev-image:latest
     ports:
-      - "80:80"
+      - "8081:80"
     environment:
       - NODE_ENV=development
     command: ["npm", "start"]
