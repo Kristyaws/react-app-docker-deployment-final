@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    checkout([
+                    checkout([ 
                         $class: 'GitSCM',
                         branches: [[name: "*/${BRANCH_NAME}"]],
                         userRemoteConfigs: [[
@@ -52,9 +52,6 @@ pipeline {
         stage('Deploy Docker Containers') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
-                    }
                     sh "docker pull ${DOCKER_PROD_REPO}:${env.BUILD_NUMBER}"
                     sh './deploy.sh'
                 }
