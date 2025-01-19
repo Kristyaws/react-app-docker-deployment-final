@@ -6,7 +6,13 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         GIT_CREDENTIALS_ID = 'git-credentials'
         GIT_REPO_URL = 'https://github.com/Kristyaws/react-app-docker-deployment-final.git'
+<<<<<<< HEAD
         BRANCH_NAME = 'master'
+=======
+        DEV_BRANCH = 'dev'
+        MASTER_BRANCH = 'master'
+        BRANCH_NAME = "${env.BRANCH_NAME ?: env.GIT_BRANCH}" // Use GIT_BRANCH if BRANCH_NAME is not set
+>>>>>>> 2b9bc1d (Update Jenkinsfile)
     }
 
     stages {
@@ -16,10 +22,14 @@ pipeline {
                     checkout([ 
                         $class: 'GitSCM',
 <<<<<<< HEAD
+<<<<<<< HEAD
                         branches: [[name: "*/${BRANCH_NAME}"]],
 =======
                         branches: [[name: "*/${env.GIT_BRANCH}"]],
 >>>>>>> 4a55d94 (Update Jenkinsfile)
+=======
+                        branches: [[name: "*/${BRANCH_NAME}"]],
+>>>>>>> 2b9bc1d (Update Jenkinsfile)
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
                             credentialsId: "${GIT_CREDENTIALS_ID}"
@@ -53,13 +63,13 @@ pipeline {
                     sh "docker push ${buildTag}"
 =======
                 anyOf {
-                    branch 'dev'
-                    branch 'master'
+                    branch "${env.DEV_BRANCH}"
+                    branch "${env.MASTER_BRANCH}"
                 }
             }
             steps {
                 script {
-                    def dockerRepo = env.GIT_BRANCH == 'origin/master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+                    def dockerRepo = BRANCH_NAME == env.MASTER_BRANCH ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
 
                     // Build the Docker image
                     sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
