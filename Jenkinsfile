@@ -6,7 +6,7 @@ pipeline {
         DOCKER_PROD_REPO = 'kristyaws/prod'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         GIT_CREDENTIALS_ID = 'git-credentials'
-        GIT_REPO_URL = 'https://github.com/Kristyaws/react-app-docker-deployment.git'
+        GIT_REPO_URL = 'https://github.com/Kristyaws/react-app-docker-deployment-final.git'
     }
 
     stages {
@@ -53,4 +53,3 @@ pipeline {
         }
     }
 }
-
