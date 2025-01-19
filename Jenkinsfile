@@ -28,7 +28,6 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Execute build.sh script
                     sh './build.sh'
                 }
             }
@@ -41,16 +40,10 @@ pipeline {
             steps {
                 script {
                     def dockerRepo = DOCKER_PROD_REPO
-
-                    // Build the Docker image
                     sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
-
-                    // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
                     }
-
-                    // Push the Docker image
                     sh "docker push ${dockerRepo}:${env.BUILD_NUMBER}"
                 }
             }
@@ -59,7 +52,9 @@ pipeline {
         stage('Deploy Docker Containers') {
             steps {
                 script {
-                    // Execute deploy.sh script
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
                     sh './deploy.sh'
                 }
             }
