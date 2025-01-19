@@ -15,7 +15,7 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: '*/${env.BRANCH_NAME}']],
+                        branches: [[name: "*/${env.GIT_BRANCH}"]],
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
                             credentialsId: "${GIT_CREDENTIALS_ID}"
@@ -30,6 +30,31 @@ pipeline {
                 script {
                     // Execute build.sh script
                     sh './build.sh'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            when {
+                anyOf {
+                    branch 'dev'
+                    branch 'master'
+                }
+            }
+            steps {
+                script {
+                    def dockerRepo = env.GIT_BRANCH == 'master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+
+                    // Build the Docker image
+                    sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
+
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
+
+                    // Push the Docker image
+                    sh "docker push ${dockerRepo}:${env.BUILD_NUMBER}"
                 }
             }
         }
