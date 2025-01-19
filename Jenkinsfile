@@ -15,7 +15,6 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "*/${env.GIT_BRANCH}"]],
                         branches: [[name: "*/${BRANCH_NAME}"]],
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
@@ -37,14 +36,8 @@ pipeline {
 
         stage('Push Docker Image') {
             when {
-                anyOf {
-                    branch 'dev'
-                    branch 'master'
-                }
+                branch 'master'
             }
-            steps {
-                script {
-                    def dockerRepo = env.GIT_BRANCH == 'master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
             steps {
                 script {
                     def dockerRepo = DOCKER_PROD_REPO
