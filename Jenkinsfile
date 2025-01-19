@@ -43,7 +43,7 @@ pipeline {
             }
             steps {
                 script {
-                    def dockerRepo = env.GIT_BRANCH == 'master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+                    def dockerRepo = env.GIT_BRANCH == 'origin/master' ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
 
                     // Build the Docker image
                     sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
