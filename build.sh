@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd /home/ubuntu/devops-build/build
-
 echo "Building Docker images"
 docker-compose build
 

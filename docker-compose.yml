@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    image: mohan006007/dev-image:latest
+    image: kristyaws/dev-image:latest
     build: .
     ports:
       - "80:80"

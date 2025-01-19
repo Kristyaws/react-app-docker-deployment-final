@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd /home/ubuntu/devops-build/build
-
 echo "Starting Docker containers"
 docker-compose up -d
 
