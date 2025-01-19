@@ -19,8 +19,8 @@ pipeline {
                         userRemoteConfigs: [[
                             url: "${GIT_REPO_URL}",
                             credentialsId: "${GIT_CREDENTIALS_ID}"
-                        ]]
-                    ])
+                        ]]]
+                    )
                 }
             }
         }
@@ -40,11 +40,12 @@ pipeline {
             steps {
                 script {
                     def dockerRepo = DOCKER_PROD_REPO
-                    sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
+                    def buildTag = "${dockerRepo}:${env.BUILD_NUMBER}"  // Using BUILD_NUMBER tag
+                    sh "docker build -t ${buildTag} ."
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
                     }
-                    sh "docker push ${dockerRepo}:${env.BUILD_NUMBER}"
+                    sh "docker push ${buildTag}"
                 }
             }
         }
@@ -52,7 +53,8 @@ pipeline {
         stage('Deploy Docker Containers') {
             steps {
                 script {
-                    sh "docker pull ${DOCKER_PROD_REPO}:${env.BUILD_NUMBER}"
+                    def buildTag = "${DOCKER_PROD_REPO}:${env.BUILD_NUMBER}"  // Using BUILD_NUMBER tag
+                    sh "docker pull ${buildTag}"
                     sh './deploy.sh'
                 }
             }
