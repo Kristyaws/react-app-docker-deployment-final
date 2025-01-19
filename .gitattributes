@@ -1,0 +1,6 @@
+deploy.sh merge=ours
+build.sh merge=ours
+Dockerfile merge=ours
+docker-compose.yml merge=ours
+Jenkinsfile merge=ours
+
