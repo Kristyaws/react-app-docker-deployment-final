@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     def dockerRepo = DOCKER_PROD_REPO
-                    def buildTag = "${dockerRepo}:${env.BUILD_NUMBER}"  // Using BUILD_NUMBER tag
+                    def buildTag = "${dockerRepo}:${env.BUILD_NUMBER}"
                     sh "docker build -t ${buildTag} ."
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
@@ -53,7 +53,7 @@ pipeline {
         stage('Deploy Docker Containers') {
             steps {
                 script {
-                    def buildTag = "${DOCKER_PROD_REPO}:${env.BUILD_NUMBER}"  // Using BUILD_NUMBER tag
+                    def buildTag = "${DOCKER_PROD_REPO}:${env.BUILD_NUMBER}"
                     sh "docker pull ${buildTag}"
                     sh './deploy.sh'
                 }
