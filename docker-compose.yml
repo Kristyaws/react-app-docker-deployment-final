@@ -5,8 +5,6 @@ services:
     image: kristyaws/dev-image:latest
     ports:
       - "80:80"
-    volumes:
-      - .:/app
     environment:
       - NODE_ENV=production
     command: ["npm", "start"]
