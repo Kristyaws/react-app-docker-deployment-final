@@ -3,13 +3,10 @@ pipeline {
 
     environment {
         DOCKER_DEV_REPO = 'kristyaws/dev'
-        DOCKER_PROD_REPO = 'kristyaws/prod'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         GIT_CREDENTIALS_ID = 'git-credentials'
         GIT_REPO_URL = 'https://github.com/Kristyaws/react-app-docker-deployment-final.git'
-        DEV_BRANCH = 'dev'
-        MASTER_BRANCH = 'master'
-        BRANCH_NAME = "${env.BRANCH_NAME ?: env.GIT_BRANCH}" // Use GIT_BRANCH if BRANCH_NAME is not set
+        BRANCH_NAME = 'dev'
     }
 
     stages {
@@ -38,15 +35,9 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-            when {
-                anyOf {
-                    branch "${env.DEV_BRANCH}"
-                    branch "${env.MASTER_BRANCH}"
-                }
-            }
             steps {
                 script {
-                    def dockerRepo = BRANCH_NAME == env.MASTER_BRANCH ? DOCKER_PROD_REPO : DOCKER_DEV_REPO
+                    def dockerRepo = DOCKER_DEV_REPO
 
                     // Build the Docker image
                     sh "docker build -t ${dockerRepo}:${env.BUILD_NUMBER} ."
